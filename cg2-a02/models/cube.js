@@ -86,6 +86,15 @@ define(["vbo"],
                         0.5, -0.5, -0.5,  // F'': index 22
                         0.5, -0.5,  0.5   // B'': index 23
                      ];
+        //
+        var indices = [
+                        0,1,2,    1,2,3,    // front:   ABC, ACD
+                        4,5,7,    5,6,7,    // back:    EFH, FGH
+                        8,9,10,   8,10,11,  // left:    ADH, AHE
+                        12,13,14, 12,14,15, // right:   BFG, BGC
+                        16,17,18, 16,18,19, // top:     DCG, DGH
+                        20,21,22, 20,22,23  // bottom:  AEF, AFB
+        ];
                                           
         // therer are 3 floats per vertex, so...
         this.numVertices = coords.length / 3;
@@ -95,7 +104,8 @@ define(["vbo"],
                                                     "dataType": gl.FLOAT,
                                                     "data": coords 
                                                   } );
-
+        // create vertex buffer object (VBO) for the triangles
+        this.triangleBuffer = new vbo.Indices(gl, { "indices": indices } );
         
     };
 
@@ -104,9 +114,11 @@ define(["vbo"],
     
         // bind the attribute buffers
         this.coordsBuffer.bind(gl, program, "vertexPosition");
+        this.triangleBuffer.bind(gl);
                 
-        // draw the vertices as points
-        gl.drawArrays(gl.POINTS, 0, this.coordsBuffer.numVertices()); 
+        // draw the vertices as triangles
+        //Primitivtyp, Anzahl d. Indices, WebGL-Datentyp für Indizes, Startposition
+        gl.drawElements(gl.TRIANGLES, this.triangleBuffer.numIndices(), gl.UNSIGNED_SHORT, 0); 
          
     };
         
