@@ -1,0 +1,84 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    
+    <!--
+     *
+     * JavaScript / Canvas teaching framwork 
+     * (C)opyright Hartmut Schirmacher, hschirmacher.beuth-hochschule.de 
+     *
+    -->
+
+    <title>CG2 A1: Lines, Curves &amp; Canvas</title>
+    
+    <!-- import main module using RequireJS -->
+    <script data-main="main.js" src="../lib/require.js"></script>
+    
+    <!-- import style sheet -->
+    <link rel="stylesheet" type="text/css" media="screen" href="style.css">
+    
+</head>
+
+<body>
+
+  <!-- this element will be used to diplay errors -->
+  <pre id="error"></pre>
+  
+  <!-- centered region with drawing canvas and parameter area -->
+  <div align="center">
+  
+    <canvas id="drawing_area" width="500" height="400" style="position:relative;">
+        <!-- NOTE: the "position:relative" is required due to the current  
+             implementation of mouse coordinate processing in module "util". -->
+        If you see this text, your browser probably does not 
+        support the HTML5 canvas 2D drawing context. 
+    </canvas>
+    
+    <div id="param_area" >
+        <form action="#" method="post">        
+          <label for="inputColor">Colour: </label>
+            <input id="inputColor" type="color"></br>
+          <label for="inputNumber">Number: </label>             
+            <input id="inputNumber" type="input"> </br>
+
+          <div id="radiusContainer">
+            <label for="showRadius">Radius: </label>
+              <input id="showRadius" type="input"></br>
+          </div> 
+
+            <label for="xCord">x(t): </label>
+            <input id="xCord" type="input" value="350+100*Math.sin(t)"></br>
+            <label for="yCord">y(t): </label>             
+          <input id="yCord" type="input" value="150+100*Math.cos(t)"> </br>  
+            <label for="minT">min t: </label>
+          <input id="minT" type="number" min="0" max="99" value="0" step="0.1">
+          </br>
+            <label for="maxT">max t: </label>
+          <input id="maxT" type="number" min="0" max="99" value="1" step="0.1"></br>
+            <label for="inpSegment">Segments: </label>
+          <input id="inpSegment" type="number" min="1" max="100" value="6"></br>
+          <label for="checkBoxTM">Tick marks: </label>
+          <input id="checkBoxTM" type="checkbox" value="#"></br>
+        
+        
+        </form>  
+
+        <h3>Create Objects:</h3>
+
+        <button id="btnNewLine" type="button"   >New Line</button>
+        </br>
+        <button id="btnNewCircle" type="button"   >New Circle</button>
+        </br>
+        <button id="btnNewPCurve" type="button">New Paramentric Curve</button> </br>
+        <button id="btnNewBezier" type="button">New Bezier Curve</button> </br> 
+
+
+    </div>
+    
+    <div style="float:clear;">
+    </div>
+    
+  </div>
+  
+</body>
+</html>
