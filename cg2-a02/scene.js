@@ -35,6 +35,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         this.triangle  = new Triangle(gl);
         this.cube      = new Cube(gl); 
         this.band      = new Band(gl, {height: 0.4, drawStyle: "points"});
+        this.bandTriangles = new Band(gl, {height: 0.4, drawStyle: "triangles"});
 
         // create a parametric surface to be drawn in this scene
         var positionFunc = function(u,v) {
@@ -104,6 +105,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                              "Show Triangle": false,
                              "Show Cube": false,
                              "Show Band": true,
+                             "Show Band build with Triangles": false,
                              "Show Ellipsoid": false,
                              "Show Drop": false,
                              "Show Torus": false
@@ -148,6 +150,9 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         }
         if(this.drawOptions["Show Band"]) {    
             this.band.draw(gl, this.programs.red);
+        }
+        if(this.drawOptions["Show Band build with Triangles"]){
+            this.bandTriangles.draw(gl, this.programs.red);
         }
         if(this.drawOptions["Show Ellipsoid"]) {    
             this.ellipsoid.draw(gl, this.programs.red);
