@@ -13,11 +13,13 @@
 /* requireJS module definition - this loads the shaders asynchronously! */
 define(["text!shaders/vertex_color.vs", "text!shaders/vertex_color.fs",
         "text!shaders/unicolor.vs",     "text!shaders/unicolor.fs",
-        "text!shaders/red.vs",          "text!shaders/red.fs"
+        "text!shaders/red.vs",          "text!shaders/red.fs",
+        "text!shaders/black.fs"
        ], 
        (function( vs_vertex_color, fs_vertex_color,
                   vs_unicolor,     fs_unicolor,
-                  vs_red,          fs_red
+                  vs_red,          fs_red,
+                                   fs_black
                  ) {
 
     "use strict";
@@ -27,6 +29,7 @@ define(["text!shaders/vertex_color.vs", "text!shaders/vertex_color.fs",
     shaders["vertex_color"] = {vertex: vs_vertex_color, fragment: fs_vertex_color};
     shaders["unicolor"]     = {vertex: vs_unicolor,     fragment: fs_unicolor};
     shaders["red"]          = {vertex: vs_red,          fragment: fs_red};
+    shaders["black"]        = {vertex: vs_red,          fragment: fs_black};
 
     var mod = {};
 

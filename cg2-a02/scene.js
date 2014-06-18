@@ -25,6 +25,9 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         this.programs.red = new Program(gl, 
                                         shaders.getVertexShader("red"), 
                                         shaders.getFragmentShader("red") );
+        this.programs.black = new Program(gl, 
+                                        shaders.getVertexShader("red"), 
+                                        shaders.getFragmentShader("black") );
         this.programs.vertexColor = new Program(gl, 
                                                 shaders.getVertexShader("vertex_color"), 
                                                 shaders.getFragmentShader("vertex_color") );   
@@ -34,8 +37,10 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         // create some objects to be drawn in this scene
         this.triangle  = new Triangle(gl);
         this.cube      = new Cube(gl); 
-        this.band      = new Band(gl, {height: 0.4, drawStyle: "points"});
+        this.band      = new Band(gl, {height: 0.4, drawStyle: "points", asWireframe: false});
         this.bandTriangles = new Band(gl, {height: 0.4, drawStyle: "triangles"});
+        this.bandLines = new Band(gl, {height: 0.4, drawStyle: "points", asWireframe: true});
+
 
         // create a parametric surface to be drawn in this scene
         var positionFunc = function(u,v) {
@@ -106,6 +111,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                              "Show Cube": false,
                              "Show Band": true,
                              "Show Band build with Triangles": false,
+                             "Show Band as Wireframe": false,
                              "Show Ellipsoid": false,
                              "Show Drop": false,
                              "Show Torus": false
@@ -153,6 +159,9 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         }
         if(this.drawOptions["Show Band build with Triangles"]){
             this.bandTriangles.draw(gl, this.programs.red);
+        }
+        if(this.drawOptions["Show Band as Wireframe"]){
+            this.bandLines.draw(gl, this.programs.black);
         }
         if(this.drawOptions["Show Ellipsoid"]) {    
             this.ellipsoid.draw(gl, this.programs.red);
