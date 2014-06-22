@@ -39,6 +39,7 @@ define(["jquery", "gl-matrix", "webgl-debug", "animation", "scene", "html_contro
      * create an animation that rotates the scene around 
      * the Y axis over time. 
      */
+     var blah = 0;
     var makeAnimation = function(scene) {
     
         // create animation to rotate the scene
@@ -46,10 +47,23 @@ define(["jquery", "gl-matrix", "webgl-debug", "animation", "scene", "html_contro
 
             // rotation angle, depending on animation time
             var angle = deltaT/1000 * animation.customSpeed; // in degrees
-
+            blah ++;
             // ask the scene to rotate around Y axis
             scene.rotate("worldY", angle); 
-                        
+            // window.console.log("angle: "+blah)
+            if (blah <= 350) {
+                scene.rotate("shoulderR", angle);
+                scene.rotate("shoulderL", -angle);
+               
+            }
+            else if (blah>350&&blah<650){
+                scene.rotate("shoulderR", -angle);
+                scene.rotate("shoulderL", angle);
+            }
+            else {
+                blah = 0;
+            }
+
             // (re-) draw the scene
             scene.draw();
             

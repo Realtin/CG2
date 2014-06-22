@@ -42,7 +42,7 @@ define(["scene_node", "gl-matrix", "program", "models/band", "models/triangle", 
 		var ellipsoid = new ParametricSurface(gl, positionFunc, config);
 
 		//Dimensionen
-		var kroneSize = [0.25, 0.3, 0.25];
+		var kroneSize = [0.175, 0.3, 0.175];
 		var headSize = [0.25, 0.3, 0.25];
 		var neckSize = [0.2, 0.05, 0.2];
 		var torsoSize = [0.6, 0.9, 0.4];
@@ -99,7 +99,7 @@ define(["scene_node", "gl-matrix", "program", "models/band", "models/triangle", 
 		mat4.rotate(this.finger1R.transform(), Math.PI, [1, 0, 0]);
 
 		this.shoulderL = new SceneNode("shoulder links");
-		mat4.translate(this.shoulderL.transform(), [(torsoSize[0] / 2 + shoulderLSize[0] / 4), (torsoSize[1] / 3 + shoulderLSize[0] / 2), 0]);
+		mat4.translate(this.shoulderL.transform(), [(torsoSize[0] / 2 + shoulderLSize[0]/4), (torsoSize[1] / 3 + shoulderLSize[0] / 2), 0]);
 		mat4.rotate(this.shoulderL.transform(), Math.PI, [1, 1, 0]);
 
 		this.upperArmL = new SceneNode("upper arm links");
