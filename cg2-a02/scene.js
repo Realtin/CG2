@@ -218,19 +218,29 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             case "worldX": 
                 mat4.rotate(this.transformation, angle, [1,0,0]);
                 break;
-            case "shoulder": 
-                mat4.rotate(this.robot.shoulder.transformation, angle, [0,1,0]);
+            case "shoulderR": 
+                mat4.rotate(this.robot.shoulderR.transformation, angle, [0,1,0]);
+                break;
+            case "shoulderL": 
+                mat4.rotate(this.robot.shoulderL.transformation, angle, [0,1,0]);
                 break;
             case "neck": 
                 mat4.rotate(this.robot.neck.transformation, angle, [0,1,0]);
                 break;
-            case "elbow": 
-                mat4.rotate(this.robot.elbow.transformation, angle, [0,1,0]);
+            case "elbowR": 
+                mat4.rotate(this.robot.elbowR.transformation, angle, [0,1,0]);
+                break;
+            case "elbowL": 
+                mat4.rotate(this.robot.elbowL.transformation, angle, [0,1,0]);
                 break;
             default:
                 window.console.log("axis " + rotationAxis + " not implemented.");
             break;
         };
+
+        mat4.rotate(this.robot.finger1R.transformation, 0.5, [0,1,0]);
+        mat4.rotate(this.robot.finger1L.transformation, 0.5, [0,1,0]);
+
 
         // redraw the scene
         this.draw();

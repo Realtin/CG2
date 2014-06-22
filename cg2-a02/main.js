@@ -105,10 +105,14 @@ define(["jquery", "gl-matrix", "webgl-debug", "animation", "scene", "html_contro
              'X': {axis: "worldX", angle: -5.0}, 
              'y': {axis: "worldY", angle:  5.0}, 
              'Y': {axis: "worldY", angle: -5.0},
-             'c': {axis: "shoulder", angle:  5.0}, 
-             'C': {axis: "shoulder", angle: -5.0},
-             'b': {axis: "elbow", angle:  5.0}, 
-             'B': {axis: "elbow", angle: -5.0},
+             'c': {axis: "shoulderR", angle:  5.0}, 
+             'C': {axis: "shoulderR", angle: -5.0},
+             'd': {axis: "shoulderL", angle:  5.0}, 
+             'D': {axis: "shoulderL", angle: -5.0},
+             'b': {axis: "elbowR", angle:  5.0}, 
+             'B': {axis: "elbowR", angle: -5.0},
+             'g': {axis: "elbowL", angle:  5.0}, 
+             'G': {axis: "elbowL", angle: -5.0},
              'v': {axis: "neck", angle:  5.0}, 
              'V': {axis: "neck", angle: -5.0}
         };
