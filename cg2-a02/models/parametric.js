@@ -33,17 +33,21 @@ define(["vbo"],
         var vMax       = config.vMax        || 1;
 
         this.drawStyle = config.drawStyle   || "points";
+        this.asWireframe = config.asWireframe || false;
 
-        window.console.log("creating ParametricCurve with  uSegments: " + uSegments + "vSegments: "+ vSegments+ " and u between "+ uMin+ " - "+uMax+" and v between "+ vMin+" - "+vMax+ " ")
+        window.console.log("creating ParametricCurve with  uSegments: " + uSegments + " vSegments: "+ vSegments+ " and u between "+ uMin+ " - "+uMax+" and v between "+ vMin+" - "+vMax+ (this.asWireframe? " also with a Wireframe ":""));
         
         // coordinates
         var points = [];
         //PosFunc coordinates
         var pos = [];
+        //Wireframe
+        var lines = [];
+
         var u, v, x, y, z;
 
-        for (var i = 0; i < uSegments + 1; i++) {
-            for (var j = 0; j < vSegments + 1; j++) {
+        for (var i = 1; i <= uSegments+1; i++) {
+            for (var j = 1; j <= vSegments+1; j++) {
                 // t = t_min + i/N * (t_max - t_min)
                 u = uMin + i*(uMax-uMin)/uSegments;
                 v = vMin + j*(vMax-vMin)/vSegments;
@@ -53,6 +57,11 @@ define(["vbo"],
                 z = pos[2];
 
                 points.push(x,y,z);
+
+                if (this.asWireframe){
+                    lines.push(((i*vSegments)+j)-1, ((i*vSegments)+j));
+                    lines.push((((i-1)*vSegments)+j)-1, ((i*vSegments)+j));
+                }
             };
         }
         
@@ -61,6 +70,7 @@ define(["vbo"],
                                                     "dataType": gl.FLOAT,
                                                     "data": points 
                                                   } );
+        this.linesBuffer = new vbo.Indices(gl, {"indices": lines});
 
 
     };  
@@ -77,6 +87,15 @@ define(["vbo"],
             gl.drawArrays(gl.POINTS, 0, this.coordsBuffer.numVertices()); 
         } else {
             window.console.log("ParametricSurface: draw style " + this.drawStyle + " not implemented.");
+        }
+
+        //Wireframe
+        if(this.asWireframe){
+
+            //destroys my triangles when outside the if ... 
+            this.linesBuffer.bind(gl);
+
+            gl.drawElements(gl.LINES, this.linesBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
         }
     };
         

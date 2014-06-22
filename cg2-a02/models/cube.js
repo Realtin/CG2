@@ -88,14 +88,46 @@ define(["vbo"],
                      ];
         //
         var indices = [
-                        0,1,2,    1,2,3,    // front:   ABC, ACD
+                        0,1,2,    0,2,3,    // front:   ABC, ACD
                         4,5,7,    5,6,7,    // back:    EFH, FGH
                         8,9,10,   8,10,11,  // left:    ADH, AHE
                         12,13,14, 12,14,15, // right:   BFG, BGC
                         16,17,18, 16,18,19, // top:     DCG, DGH
                         20,21,22, 20,22,23  // bottom:  AEF, AFB
         ];
-                                          
+            
+        var colors = [
+                        1.0, 0.0, 1.0, 1.0,  // rgba-color of A
+                        1.0, 1.0, 0.0, 1.0,  // rgba-color of B
+                        1.0, 1.0, 0.0, 1.0,  // rgba-color of C
+                        1.0, 0.0, 1.0, 1.0,  // rgba-color of D
+
+                        1.0, 1.0, 0.0, 1.0,  // rgba-color of E
+                        1.0, 0.0, 1.0, 1.0,  // rgba-color of F
+                        1.0, 0.0, 1.0, 1.0,  // rgba-color of G
+                        1.0, 1.0, 0.0, 1.0,   // rgba-color of H
+
+                        1.0, 0.0, 1.0, 1.0,  // rgba-color of A
+                        1.0, 0.0, 1.0, 1.0,  // rgba-color of D
+                        1.0, 1.0, 0.0, 1.0,   // rgba-color of H
+                        1.0, 1.0, 0.0, 1.0,  // rgba-color of E
+
+                        1.0, 1.0, 0.0, 1.0,  // rgba-color of B
+                        1.0, 0.0, 1.0, 1.0,  // rgba-color of F
+                        1.0, 0.0, 1.0, 1.0,  // rgba-color of G
+                        1.0, 1.0, 0.0, 1.0,  // rgba-color of C
+
+                        1.0, 0.0, 1.0, 1.0,  // rgba-color of D
+                        1.0, 0.0, 1.0, 1.0,  // rgba-color of C
+                        1.0, 0.0, 1.0, 1.0,  // rgba-color of G
+                        1.0, 1.0, 0.0, 1.0,   // rgba-color of H
+
+                        1.0, 0.0, 1.0, 1.0,  // rgba-color of A
+                        1.0, 0.0, 1.0, 1.0,  // rgba-color of E
+                        1.0, 0.0, 1.0, 1.0,  // rgba-color of F
+                        1.0, 1.0, 0.0, 1.0  // rgba-color of B
+                     ];
+                                                       
         // therer are 3 floats per vertex, so...
         this.numVertices = coords.length / 3;
         
@@ -104,8 +136,17 @@ define(["vbo"],
                                                     "dataType": gl.FLOAT,
                                                     "data": coords 
                                                   } );
+
+         // create vertex buffer object (VBO) for the color
+        this.colorsBuffer = new vbo.Attribute(gl, { "numComponents": 4,
+                                                    "dataType": gl.FLOAT,
+                                                    "data": colors 
+                                                  } );
+
         // create vertex buffer object (VBO) for the triangles
         this.triangleBuffer = new vbo.Indices(gl, { "indices": indices } );
+
+        
         
     };
 
@@ -114,11 +155,12 @@ define(["vbo"],
     
         // bind the attribute buffers
         this.coordsBuffer.bind(gl, program, "vertexPosition");
+        this.colorsBuffer.bind(gl, program, "vertexColor");
         this.triangleBuffer.bind(gl);
                 
         // draw the vertices as triangles
         //Primitivtyp, Anzahl d. Indices, WebGL-Datentyp für Indizes, Startposition
-        gl.drawElements(gl.TRIANGLES, this.triangleBuffer.numIndices(), gl.UNSIGNED_SHORT, 0); 
+        gl.drawElements(gl.TRIANGLES, this.triangleBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
          
     };
         

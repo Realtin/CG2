@@ -8,8 +8,8 @@
 
 /* requireJS module definition */
 define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "models/cube",
-        "models/parametric"], 
-       (function(glmatrix, Program, shaders, Band, Triangle, Cube, ParametricSurface ) {
+        "models/parametric", "models/robot"], 
+       (function(glmatrix, Program, shaders, Band, Triangle, Cube, ParametricSurface, Robot) {
 
     "use strict";
     
@@ -72,8 +72,19 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             "uMax":  Math.PI, 
             "vMin": -Math.PI, 
             "vMax":  Math.PI, 
-            "uSegments": 40,
-            "vSegments": 20
+            "uSegments": 30,
+            "vSegments": 20,
+            "asWireframe": false
+        };
+
+         var configWF = {
+            "uMin": -Math.PI, 
+            "uMax":  Math.PI, 
+            "vMin": -Math.PI, 
+            "vMax":  Math.PI, 
+            "uSegments": 30,
+            "vSegments": 20,
+            "asWireframe": true
         };
 
          var configDrop = {
@@ -82,7 +93,8 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             "vMin": 0, 
             "vMax":  Math.PI*2, 
             "uSegments": 50,
-            "vSegments": 50
+            "vSegments": 50,
+            "asWireframe": false
         };
         var configTorus = {
             "uMin": 0, 
@@ -90,12 +102,17 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             "vMin": 0, 
             "vMax":  2*Math.PI,
             "uSegments": 100,
-            "vSegments": 10
+            "vSegments": 10,
+            "asWireframe": false
         };
 
         this.ellipsoid = new ParametricSurface(gl, positionFunc, config);
+        this.ellipsoidWF = new ParametricSurface(gl, positionFunc, configWF);
+
         this.Drop = new ParametricSurface(gl, positionFuncDrop, configDrop);
         this.torus = new ParametricSurface(gl, positionFuncTorus, configTorus);
+        this.robot = new Robot(gl, this.programs);
+
 
         // initial position of the camera
         this.cameraTransformation = mat4.lookAt([0,0.5,3], [0,0,0], [0,1,0]);
@@ -110,12 +127,13 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                              "Show Triangle": false,
                              "Show Cube": false,
                              "Show Band": true,
-                             "Show Band build with Triangles": false,
+                             "Show Band as Triangles": false,
                              "Show Band as Wireframe": false,
                              "Show Ellipsoid": false,
+                             "Show Ellipsoid as Wireframe": false,
                              "Show Drop": false,
-                             "Show Torus": false
-
+                             "Show Torus": false,
+                             "Show Robot": false
                              };                       
     };
 
@@ -138,6 +156,10 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             this.programs[p].setUniform("projectionMatrix", "mat4", projection);
             this.programs[p].setUniform("modelViewMatrix", "mat4", this.transformation);
         }
+
+        // set offset to avoid z-fighting
+        gl.enable(gl.POLYGON_OFFSET_FILL);
+        gl.polygonOffset(1.0, 1.0);
         
         // clear color and depth buffers
         gl.clearColor(0.7, 0.7, 0.7, 1.0); 
@@ -152,12 +174,12 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             this.triangle.draw(gl, this.programs.vertexColor);
         }
         if(this.drawOptions["Show Cube"]) {    
-            this.cube.draw(gl, this.programs.red);
+            this.cube.draw(gl, this.programs.vertexColor);
         }
         if(this.drawOptions["Show Band"]) {    
             this.band.draw(gl, this.programs.red);
         }
-        if(this.drawOptions["Show Band build with Triangles"]){
+        if(this.drawOptions["Show Band as Triangles"]){
             this.bandTriangles.draw(gl, this.programs.red);
         }
         if(this.drawOptions["Show Band as Wireframe"]){
@@ -166,11 +188,17 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         if(this.drawOptions["Show Ellipsoid"]) {    
             this.ellipsoid.draw(gl, this.programs.red);
         }
+        if(this.drawOptions["Show Ellipsoid as Wireframe"]) {    
+            this.ellipsoidWF.draw(gl, this.programs.black);
+        }
         if(this.drawOptions["Show Drop"]) {    
             this.Drop.draw(gl, this.programs.red);
         }
         if(this.drawOptions["Show Torus"]) {    
             this.torus.draw(gl, this.programs.red);
+        }
+        if(this.drawOptions["Show Robot"]) {    
+            this.robot.draw(gl, this.programs.vertexColor,  this.transformation);
         }
     };
 
