@@ -50,8 +50,8 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         };
 
         // Drop
-        var t1 = 1
-        var t2 = 0.1
+        var t1 = 1;
+        var t2 = 0.5;
         var positionFuncDrop  = function(u,v) {
             return [ t1 * (t2 - Math.cos(u)) * Math.sin(u) * Math.cos(v),
                      t1 * (t2 - Math.cos(u)) * Math.sin(u) * Math.sin(v),
@@ -88,13 +88,13 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         };
 
          var configDrop = {
-            "uMin": 0, 
+            "uMin": 1, 
             "uMax":  Math.PI, 
             "vMin": 0, 
             "vMax":  Math.PI*2, 
             "uSegments": 50,
             "vSegments": 50,
-            "asWireframe": false
+            "asWireframe": true
         };
         var configTorus = {
             "uMin": 0, 
@@ -108,7 +108,6 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
 
         this.ellipsoid = new ParametricSurface(gl, positionFunc, config);
         this.ellipsoidWF = new ParametricSurface(gl, positionFunc, configWF);
-
         this.Drop = new ParametricSurface(gl, positionFuncDrop, configDrop);
         this.torus = new ParametricSurface(gl, positionFuncTorus, configTorus);
         this.robot = new Robot(gl, this.programs);
@@ -218,6 +217,15 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                 break;
             case "worldX": 
                 mat4.rotate(this.transformation, angle, [1,0,0]);
+                break;
+            case "shoulder": 
+                mat4.rotate(this.robot.shoulder.transformation, angle, [0,1,0]);
+                break;
+            case "neck": 
+                mat4.rotate(this.robot.neck.transformation, angle, [0,1,0]);
+                break;
+            case "elbow": 
+                mat4.rotate(this.robot.elbow.transformation, angle, [0,1,0]);
                 break;
             default:
                 window.console.log("axis " + rotationAxis + " not implemented.");
