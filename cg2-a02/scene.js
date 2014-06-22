@@ -198,7 +198,7 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             this.torus.draw(gl, this.programs.red);
         }
         if(this.drawOptions["Show Robot"]) {    
-            this.robot.draw(gl, this.programs.vertexColor,  this.transformation);
+            this.robot.draw(gl, null,  this.transformation);
         }
     };
 
