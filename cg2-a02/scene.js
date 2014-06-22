@@ -126,14 +126,14 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
         this.drawOptions = { "Perspective Projection": false, 
                              "Show Triangle": false,
                              "Show Cube": false,
-                             "Show Band": true,
+                             "Show Band": false,
                              "Show Band as Triangles": false,
                              "Show Band as Wireframe": false,
                              "Show Ellipsoid": false,
                              "Show Ellipsoid as Wireframe": false,
                              "Show Drop": false,
                              "Show Torus": false,
-                             "Show Robot": false
+                             "Show Robot": true
                              };                       
     };
 
