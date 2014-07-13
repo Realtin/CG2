@@ -84,7 +84,8 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
             "vMax":  Math.PI, 
             "uSegments": 30,
             "vSegments": 20,
-            "asWireframe": true
+            "asWireframe": true,
+            "drawStyle": "triangles"
         };
 
          var configDrop = {
@@ -128,11 +129,11 @@ define(["gl-matrix", "program", "shaders", "models/band", "models/triangle", "mo
                              "Show Band": false,
                              "Show Band as Triangles": false,
                              "Show Band as Wireframe": false,
-                             "Show Ellipsoid": false,
+                             "Show Ellipsoid": true,
                              "Show Ellipsoid as Wireframe": false,
                              "Show Drop": false,
                              "Show Torus": false,
-                             "Show Robot": true
+                             "Show Robot": false
                              };                       
     };
 

@@ -43,11 +43,12 @@ define(["vbo"],
         var pos = [];
         //Wireframe
         var lines = [];
+        var triangles =[];
 
-        var u, v, x, y, z;
+        var a, u, v, x, y, z;
 
-        for (var i = 1; i <= uSegments+1; i++) {
-            for (var j = 1; j <= vSegments+1; j++) {
+        for (var i = 0; i <= uSegments+1; i++) {
+            for (var j = 0; j <= vSegments+1; j++) {
                 // t = t_min + i/N * (t_max - t_min)
                 u = uMin + i*(uMax-uMin)/uSegments;
                 v = vMin + j*(vMax-vMin)/vSegments;
@@ -58,11 +59,32 @@ define(["vbo"],
 
                 points.push(x,y,z);
 
+            }
+        }
+        for (var i = 1; i <= uSegments+1; i++) {
+            for (var j = 1; j <= vSegments+1; j++) {
+                // t = t_min + i/N * (t_max - t_min)
+             
+
+
                 if (this.asWireframe){
-                    lines.push(((i*vSegments)+j)-1, ((i*vSegments)+j));
-                    lines.push((((i-1)*vSegments)+j)-1, ((i*vSegments)+j));
-                }
-            };
+                    lines.push(i*(vSegments+1)+j-1, i*(vSegments+1)+j);
+                    lines.push((i-1)*(vSegments+1)+j-1, i*(vSegments+1)+j);
+                };
+            }
+        }
+
+         for (var i = 1; i <= uSegments; i++) {
+            for (var j = 1; j <= vSegments; j++) {
+                a = i* (vSegments +1) + j;
+                triangles.push(a)
+                triangles.push(a-1);
+                triangles.push(a-1 -(vSegments+1));
+
+                triangles.push(a);
+                triangles.push(a-(vSegments+1));
+                triangles.push(a-1 -(vSegments+1));
+            }
         }
         
    // create vertex buffer object (VBO) for the coordinates
@@ -71,6 +93,7 @@ define(["vbo"],
                                                     "data": points 
                                                   } );
         this.linesBuffer = new vbo.Indices(gl, {"indices": lines});
+        this.trianglesBuffer = new vbo.Indices(gl, {"indices": triangles});
 
 
     };  
@@ -85,7 +108,10 @@ define(["vbo"],
         // draw the vertices as points
         if(this.drawStyle == "points") {
             gl.drawArrays(gl.POINTS, 0, this.coordsBuffer.numVertices()); 
-        } else {
+        } else if ( this.drawStyle == "triangles") {
+            this.trianglesBuffer.bind(gl);
+            gl.drawElements(gl.TRIANGLES, this.trianglesBuffer.numIndices(), gl.UNSIGNED_SHORT, 0); 
+        }else {
             window.console.log("ParametricSurface: draw style " + this.drawStyle + " not implemented.");
         }
 
