@@ -8,9 +8,9 @@
 
 /* requireJS module definition */
 define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "material", "texture", 
-        "models/cube"], 
+        "models/cube", "models/parametric"], 
        (function(glmatrix, Program, SceneNode, shaders, DirectionalLight, Material, texture, 
-        Cube) {
+        Cube, ParametricSurface) {
 
     "use strict";
 
@@ -27,6 +27,42 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
                                              shaders.getFragmentShader("unicolor") );
         this.programs.planet = new Program(gl, shaders.getVertexShader("planet"), 
                                               shaders.getFragmentShader("planet") );
+
+        // create a parametric surface to be drawn in this scene
+        var r = 1;
+        var positionFunc = function(u,v) {
+            return [ r * Math.sin(u) * Math.cos(v),
+                     r * Math.sin(u) * Math.sin(v),
+                     r * Math.cos(u) ];
+        };
+
+        var normalFunc = function(u,v) {
+            return [ Math.sin(u) * Math.cos(v),
+                     Math.sin(u) * Math.sin(v),
+                     Math.cos(u) ];
+        };
+
+        var config = {
+            "uMin":  0, 
+            "uMax":  Math.PI, 
+            "vMin":  0, 
+            "vMax":  Math.PI*2, 
+            "uSegments": 50,
+            "vSegments": 50,
+            "asWireframe": false,
+            "drawStyle": "surface"
+        };
+
+         var configWF = {
+            "uMin": -Math.PI, 
+            "uMax":  Math.PI, 
+            "vMin": -Math.PI, 
+            "vMax":  Math.PI, 
+            "uSegments": 30,
+            "vSegments": 20,
+            "asWireframe": true,
+            "drawStyle": "surface"
+        };
 
         // set of materials to be used
         this.materials = {};
@@ -65,7 +101,8 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         this.sunLight.addMaterial(this.materials.planet);
 
         // planet surface
-        this.planetSurface = new Cube(gl);
+        //this.planetSurface = new Cube(gl);
+        this.planetSurface = new ParametricSurface(gl, positionFunc, normalFunc, config);
         this.surfaceNode = new SceneNode("Surface");
         this.surfaceNode.add(this.planetSurface, this.materials.planet);
 
