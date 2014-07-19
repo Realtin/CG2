@@ -33,9 +33,9 @@ define(["vbo"],
         var vMax       = config.vMax        || 1;
 
         this.drawStyle = config.drawStyle   || "points";
-        this.asWireframe = config.asWireframe || false;
+        // this.asWireframe = config.asWireframe || false;
 
-        window.console.log("creating ParametricCurve with  uSegments: " + uSegments + " vSegments: "+ vSegments+ " and u between "+ uMin+ " - "+uMax+" and v between "+ vMin+" - "+vMax+ (this.asWireframe? " also with a Wireframe ":""));
+        window.console.log("creating ParametricCurve with  uSegments: " + uSegments + " vSegments: "+ vSegments+ " and u between "+ uMin+ " - "+uMax+" and v between "+ vMin+" - "+vMax);
         
         // coordinates
         var points = [];
@@ -49,10 +49,11 @@ define(["vbo"],
 
         var a, u, v, x, y, z;
 
-        for (var i = 0; i <= uSegments+1; i++) {
-            for (var j = 0; j <= vSegments+1; j++) {
+        for (var i = 0; i <= uSegments; i++) {
+            u = uMin + i*(uMax-uMin)/uSegments;
+            v = vMin
+            for (var j = 0; j <= vSegments; j++) {
                 // t = t_min + i/N * (t_max - t_min)
-                u = uMin + i*(uMax-uMin)/uSegments;
                 v = vMin + j*(vMax-vMin)/vSegments;
                 pos = posFunc(u,v);
                 x = pos[0];
@@ -69,15 +70,12 @@ define(["vbo"],
 
             }
         }
-        for (var i = 1; i <= uSegments+1; i++) {
-            for (var j = 1; j <= vSegments+1; j++) {
+        for (var i = 0; i < uSegments; i++) {
+            for (var j = 0; j < vSegments; j++) {
                 // t = t_min + i/N * (t_max - t_min)
-             
-
-
-                if (this.asWireframe){
-                    lines.push(i*(vSegments+1)+j-1, i*(vSegments+1)+j);
-                    lines.push((i-1)*(vSegments+1)+j-1, i*(vSegments+1)+j);
+                if (this.drawStyle == "lines"){
+                    lines.push(i*(vSegments+1)+j, i*(vSegments+1)+j+1);
+                    lines.push(i*(vSegments+1)+j, (i+1)*(vSegments+1)+j);
                 };
             }
         }
@@ -126,18 +124,12 @@ define(["vbo"],
         } else if ( this.drawStyle == "surface") {
             this.trianglesBuffer.bind(gl);
             gl.drawElements(gl.TRIANGLES, this.trianglesBuffer.numIndices(), gl.UNSIGNED_SHORT, 0); 
+        } else if (this.drawStyle == "lines"){         //Wireframe
+            this.linesBuffer.bind(gl);
+            gl.drawElements(gl.LINES, this.linesBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
         }else {
             window.console.log("ParametricSurface: draw style " + this.drawStyle + " not implemented.");
-        }
-
-        //Wireframe
-        if(this.asWireframe){
-
-            //destroys my triangles when outside the if ... 
-            this.linesBuffer.bind(gl);
-
-            gl.drawElements(gl.LINES, this.linesBuffer.numIndices(), gl.UNSIGNED_SHORT, 0);
-        }
+        }        
     };
         
     // this module only returns the Band constructor function    

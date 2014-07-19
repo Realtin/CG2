@@ -49,19 +49,19 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
             "vMax":  Math.PI*2, 
             "uSegments": 50,
             "vSegments": 50,
-            "asWireframe": false,
+            // "asWireframe": false,
             "drawStyle": "surface"
         };
 
          var configWF = {
-            "uMin": -Math.PI, 
+            "uMin":  0, 
             "uMax":  Math.PI, 
-            "vMin": -Math.PI, 
-            "vMax":  Math.PI, 
-            "uSegments": 30,
-            "vSegments": 20,
-            "asWireframe": true,
-            "drawStyle": "surface"
+            "vMin":  0, 
+            "vMax":  Math.PI*2, 
+            "uSegments": 50,
+            "vSegments": 50,
+            // "asWireframe": true,
+            "drawStyle": "lines"
         };
 
         // set of materials to be used
@@ -105,10 +105,15 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         this.planetSurface = new ParametricSurface(gl, positionFunc, normalFunc, config);
         this.surfaceNode = new SceneNode("Surface");
         this.surfaceNode.add(this.planetSurface, this.materials.planet);
+        
+        this.planetGrid = new ParametricSurface(gl, positionFunc, normalFunc, configWF);
+        this.gridNode = new SceneNode("Grid");
+        this.gridNode.add(this.planetGrid, this.materials.grid);
 
         // planet node contains surface + wireframe (todo)
         this.planetNode = new SceneNode("Planet");
         this.planetNode.add(this.surfaceNode);
+        this.planetNode.add(this.gridNode);
 
         // rotate cube so that we see two faces initially 
         mat4.rotate(this.planetNode.transform(), Math.PI/4, [0,1,0]);
@@ -123,6 +128,7 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         // automatically generates a corresponding checkbox in the UI.
         this.drawOptions = { 
                              "Show Surface": true,
+                             "Show Grid": false,
                              };                       
     };
 
@@ -155,6 +161,7 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
 
         // show/hide certain parts of the scene            
         this.surfaceNode.setVisible( this.drawOptions["Show Surface"] ); 
+        this.gridNode.setVisible(this.drawOptions["Show Grid"]);
 
         // draw the scene 
         this.universeNode.draw(gl, null, modelViewMatrix);
