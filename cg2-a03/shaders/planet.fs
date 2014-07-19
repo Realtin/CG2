@@ -24,6 +24,9 @@ uniform mat4  projectionMatrix;
 // Ambient Light
 uniform vec3 ambientLight;
 
+// Debug
+uniform bool debug;
+
 // Material
 struct PhongMaterial {
     vec3  ambient;
@@ -82,6 +85,13 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     
     // specular contribution
     vec3 specular = material.specular * light.color * pow(rdotv, material.shininess);
+
+    //Day/Night Debug
+    if(debug)
+        if(ndotl >= 0.0 && ndotl <= 0.03){
+            return vec3(0,1,0);
+        }
+        
 
     // return sum of all contributions
     return ambient + diffuse + specular;

@@ -78,6 +78,8 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         this.materials.planet.setUniform( "material.specular",  "vec3", [0.4,0.4,0.4] ); 
         this.materials.planet.setUniform( "material.shininess", "float", 80 ); 
 
+        this.materials.planet.setUniform("debug", "bool", false);
+
         // set light properties for shader
         this.materials.planet.setUniform( "ambientLight", "vec3", [0.4,0.4,0.4]);
         this.materials.planet.setUniform( "light.on", "bool", true );
@@ -106,6 +108,7 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         this.surfaceNode = new SceneNode("Surface");
         this.surfaceNode.add(this.planetSurface, this.materials.planet);
         
+        //wireframe
         this.planetGrid = new ParametricSurface(gl, positionFunc, normalFunc, configWF);
         this.gridNode = new SceneNode("Grid");
         this.gridNode.add(this.planetGrid, this.materials.grid);
@@ -129,7 +132,8 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         this.drawOptions = { 
                              "Show Surface": true,
                              "Show Grid": false,
-                             };                       
+                             "Show Debug": false,
+                            };                       
     };
 
     // the scene's draw method draws whatever the scene wants to draw
@@ -162,6 +166,14 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         // show/hide certain parts of the scene            
         this.surfaceNode.setVisible( this.drawOptions["Show Surface"] ); 
         this.gridNode.setVisible(this.drawOptions["Show Grid"]);
+
+        // Debug switch
+        if (this.drawOptions["Show Debug"]){
+            this.materials.planet.setUniform("debug", "bool", true);
+
+        }else{
+            this.materials.planet.setUniform("debug", "bool", false);
+        }
 
         // draw the scene 
         this.universeNode.draw(gl, null, modelViewMatrix);
