@@ -20,6 +20,8 @@ varying vec2  texCoords;
 // Texture
 uniform sampler2D daylightTexture;
 uniform bool daylight;
+uniform sampler2D nightlightTexture;
+uniform bool nightlight;
  
 // transformation matrices
 uniform mat4  modelViewMatrix;
@@ -63,8 +65,11 @@ uniform LightSource light;
 vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) {
     
     // ambient part
-    vec3 ambient = material.ambient * ambientLight;
-    
+    vec3 ambient = material.ambient;
+    if (nightlight) {
+        ambient = texture2D(nightlightTexture, texCoords).rgb;
+    }
+    ambient = ambient * ambientLight;
     // back face towards viewer (looking at the earth from the inside)?
     float ndotv = dot(n,v);
     if(ndotv<0.0)
@@ -82,7 +87,7 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     vec3 diffuse = material.diffuse;
     if (daylight){
         diffuse = texture2D(daylightTexture, texCoords).rgb;
-    }
+    } 
     diffuse = diffuse * light.color * ndotl;
     
      // reflected light direction = perfect reflection direction
