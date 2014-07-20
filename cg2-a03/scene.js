@@ -81,7 +81,7 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         this.materials.planet.setUniform("debug", "bool", false);
 
         // set light properties for shader
-        this.materials.planet.setUniform( "ambientLight", "vec3", [0.5,0.5,0.5]);
+        this.materials.planet.setUniform( "ambientLight", "vec3", [0.4,0.4,0.4]);
         this.materials.planet.setUniform( "light.on", "bool", true );
         this.materials.planet.setUniform( "light.type", "int", 0 );
         this.materials.planet.setUniform( "light.direction", "vec3", [-1,0,0] );
@@ -137,18 +137,21 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
                              "Show Grid": false,
                              "Show Debug": false,
                              "Day Earth Texture": true,
-                             "Night Earth Texture": true
+                             "Night Earth Texture": true,
+                             "Clouds": false
                             };  
         // Texturen
         this.tex = new texture.Texture2D(gl, "textures/earth_month04.jpg", true);
         this.tex2 = new texture.Texture2D(gl, "textures/earth_at_night_2048.jpg", true);
-        
+        this.tex3 = new texture.Texture2D(gl, "textures/earth_clouds_2048.jpg", true);
+
         var _scene = this;
 
         texture.onAllTexturesLoaded( function(){
             _scene.programs.planet.use();
             _scene.programs.planet.setTexture("daylightTexture", 0, _scene.tex);
             _scene.programs.planet.setTexture("nightlightTexture", 1, _scene.tex2);
+            _scene.programs.planet.setTexture("cloudTexture", 2, _scene.tex3);
             _scene.draw();
         });
 
@@ -202,6 +205,11 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
             this.materials.planet.setUniform("nightlight", "bool", true);
         } else {
             this.materials.planet.setUniform("nightlight", "bool", false);
+        }
+        if (this.drawOptions["Clouds"]) {
+            this.materials.planet.setUniform("clouds", "bool", true);
+        } else {
+            this.materials.planet.setUniform("clouds", "bool", false);
         }
         // draw the scene 
         this.universeNode.draw(gl, null, modelViewMatrix);

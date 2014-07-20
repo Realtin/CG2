@@ -22,6 +22,8 @@ uniform sampler2D daylightTexture;
 uniform bool daylight;
 uniform sampler2D nightlightTexture;
 uniform bool nightlight;
+uniform sampler2D cloudTexture;
+uniform bool clouds;
  
 // transformation matrices
 uniform mat4  modelViewMatrix;
@@ -69,6 +71,9 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     if (nightlight) {
         ambient = texture2D(nightlightTexture, texCoords).rgb;
     }
+    if (clouds) {
+        ambient = ambient * ( 1.0 - texture2D(cloudTexture, texCoords).r) * texture2D(daylightTexture, texCoords).rgb + texture2D(cloudTexture, texCoords).r *vec3(1,1,1);
+    }
     ambient = ambient * ambientLight;
     // back face towards viewer (looking at the earth from the inside)?
     float ndotv = dot(n,v);
@@ -88,6 +93,9 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     if (daylight){
         diffuse = texture2D(daylightTexture, texCoords).rgb;
     } 
+    if (clouds){
+        diffuse = diffuse * ( 1.0 - texture2D(cloudTexture, texCoords).r) * texture2D(daylightTexture, texCoords).rgb + texture2D(cloudTexture, texCoords).r *vec3(1,1,1);
+    }
     diffuse = diffuse * light.color * ndotl;
     
      // reflected light direction = perfect reflection direction
