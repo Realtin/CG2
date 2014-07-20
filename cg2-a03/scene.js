@@ -80,6 +80,9 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
 
         this.materials.planet.setUniform("debug", "bool", false);
 
+        // Textures
+        this.materials.planet.setUniform("daylight", "bool", false);
+
         // set light properties for shader
         this.materials.planet.setUniform( "ambientLight", "vec3", [0.4,0.4,0.4]);
         this.materials.planet.setUniform( "light.on", "bool", true );
@@ -136,7 +139,18 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
                              "Show Surface": true,
                              "Show Grid": false,
                              "Show Debug": false,
-                            };                       
+                             "Day Earth Texture": true
+                            };  
+        // Texturen
+        this.tex = new texture.Texture2D(gl, "textures/earth_month04.jpg", true);
+        var _scene = this;
+
+        texture.onAllTexturesLoaded( function(){
+            _scene.programs.planet.use();
+            _scene.programs.planet.setTexture("daylightTexture", 0, _scene.tex);
+            _scene.draw();
+        });
+
     };
 
     // the scene's draw method draws whatever the scene wants to draw
@@ -176,6 +190,12 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
 
         }else{
             this.materials.planet.setUniform("debug", "bool", false);
+        }
+
+        if (this.drawOptions["Day Earth Texture"]) {
+            this.materials.planet.setUniform("daylight", "bool", true);
+        } else {
+            this.materials.planet.setUniform("daylight", "bool", false);
         }
 
         // draw the scene 

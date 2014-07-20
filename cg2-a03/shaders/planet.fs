@@ -16,6 +16,10 @@ precision mediump float;
 varying vec4  ecPosition;
 varying vec3  ecNormal;
 varying vec2  texCoords;
+
+// Texture
+uniform sampler2D daylightTexture;
+uniform bool daylight;
  
 // transformation matrices
 uniform mat4  modelViewMatrix;
@@ -75,7 +79,11 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
         return ambient; // shadow / facing away from the light source
     
     // diffuse contribution
-    vec3 diffuse = material.diffuse * light.color * ndotl;
+    vec3 diffuse = material.diffuse;
+    if (daylight){
+        diffuse = texture2D(daylightTexture, texCoords).rgb;
+    }
+    diffuse = diffuse * light.color * ndotl;
     
      // reflected light direction = perfect reflection direction
     vec3 r = reflect(l,n);

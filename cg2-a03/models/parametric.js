@@ -68,7 +68,9 @@ define(["vbo"],
                 z = norm[2];
                 normals.push(x,y,z);
 
-                texcoords.push((v/(2*Math.PI)),(u/Math.PI));
+                var s = v/(2*Math.PI),
+                    t = u/Math.PI;
+                texcoords.push(-s,t);
 
 
             }
