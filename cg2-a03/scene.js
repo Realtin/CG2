@@ -119,7 +119,10 @@ define(["gl-matrix", "program", "scene_node", "shaders", "directional_light", "m
         this.planetNode.add(this.gridNode);
 
         // rotate cube so that we see two faces initially 
-        mat4.rotate(this.planetNode.transform(), Math.PI/4, [0,1,0]);
+        // mat4.rotate(this.planetNode.transform(), Math.PI/4, [0,1,0]);
+
+        //poles align with y-axis
+        mat4.rotate(this.planetNode.transform(), 0.5 * Math.PI, [1,0,0]);
 
         // our universe: planet + sunlight
         this.universeNode = new SceneNode("Universe");

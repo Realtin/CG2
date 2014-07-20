@@ -87,11 +87,10 @@ vec3 phong(vec3 pos, vec3 n, vec3 v, LightSource light, PhongMaterial material) 
     vec3 specular = material.specular * light.color * pow(rdotv, material.shininess);
 
     //Day/Night Debug
-    if(debug)
-        if(ndotl >= 0.0 && ndotl <= 0.03){
-            return vec3(0,1,0);
-        }
-        
+    if(debug){
+        if(ndotl >= 0.0 && ndotl <= 0.03)
+            return vec3(0,1,0);        
+    } 
 
     // return sum of all contributions
     return ambient + diffuse + specular;
@@ -114,6 +113,13 @@ void main() {
     // calculate color using phong illumination
     vec3 color = phong( ecPosition.xyz, normalEC, viewdirEC,
                         light, material );
+
+    // Streifen
+    if (debug) {
+        if (mod(texCoords.s , 0.05) < 0.025) {
+            color = color * 0.5;
+        }
+    }
 
     gl_FragColor = vec4(color, 1.0);
     

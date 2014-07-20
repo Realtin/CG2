@@ -40,6 +40,7 @@ define(["vbo"],
         // coordinates
         var points = [];
         var normals = [];
+        var texcoords = [];
         //PosFunc coordinates
         var pos = [];
         var norm = [];
@@ -66,6 +67,8 @@ define(["vbo"],
                 y = norm[1];
                 z = norm[2];
                 normals.push(x,y,z);
+
+                texcoords.push((v/(2*Math.PI)),(u/Math.PI));
 
 
             }
@@ -99,9 +102,13 @@ define(["vbo"],
                                                     "dataType": gl.FLOAT,
                                                     "data": points 
                                                   } );
+        this.texCoordsBuffer = new vbo.Attribute(gl, { "numComponents": 2,
+                                                        "dataType": gl.FLOAT,
+                                                        "data": texcoords 
+                                                    } );
         this.linesBuffer = new vbo.Indices(gl, {"indices": lines});
         this.trianglesBuffer = new vbo.Indices(gl, {"indices": triangles});
-
+ 
    // create vertex buffer object (VBO) for the coordinates = vertex position
         this.normalBuffer = new vbo.Attribute(gl, { "numComponents": 3,
                                                     "dataType": gl.FLOAT,
@@ -117,6 +124,7 @@ define(["vbo"],
         var program = material.getProgram();
         this.coordsBuffer.bind(gl, program, "vertexPosition");
         this.normalBuffer.bind(gl, program, "vertexNormal");
+        this.texCoordsBuffer.bind(gl, program, "vertexTexCoords");
  
         // draw the vertices as points
         if(this.drawStyle == "points") {
